@@ -28,10 +28,10 @@ const Player: React.FC<PlayerProps> = ({ life, onLifeChange, isReversed }) => {
       </View>
 
       <View style={styles.hpContainer}>
-        <HpButton title="- 5" disabled={willPositivExceed(-5, 0)} onPress={() => onLifeChange(clamp(life - 5, 0, 50))} />
-        <HpButton title="- 1" disabled={willPositivExceed(-1, 0)} onPress={() => onLifeChange(clamp(life - 1, 0, 50))} />
-        <HpButton title="+ 1" disabled={willNegativExceed(1, 50)} onPress={() => onLifeChange(clamp(life + 1, 0, 50))} />
-        <HpButton title="+ 5" disabled={willNegativExceed(5, 50)} onPress={() => onLifeChange(clamp(life + 5, 0, 50))} />
+        <HpButton title="5" disabled={willPositivExceed(-5, 0)} isDamage={true} onPress={() => onLifeChange(clamp(life - 5, 0, 50))} />
+        <HpButton title="1" disabled={willPositivExceed(-1, 0)} isDamage={true} onPress={() => onLifeChange(clamp(life - 1, 0, 50))} />
+        <HpButton title="1" disabled={willNegativExceed(1, 50)} onPress={() => onLifeChange(clamp(life + 1, 0, 50))} />
+        <HpButton title="5" disabled={willNegativExceed(5, 50)} onPress={() => onLifeChange(clamp(life + 5, 0, 50))} />
       </View>
     </View>
   );
