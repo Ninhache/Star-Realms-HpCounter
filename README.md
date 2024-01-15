@@ -1,4 +1,4 @@
-# Tools for https://www.starrealms.com/
+# Tool for the deckbuilding game designed by : https://www.starrealms.com/
 
 ------------
 
