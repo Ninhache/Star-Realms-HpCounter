@@ -1,25 +1,34 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, Button, StyleSheet } from 'react-native';
 import HpButton from './HpButton';
+import { useAppSettings } from './context/AppSettings';
 
 interface PlayerProps {
-  life: number;
-  onLifeChange: (newLife: number) => void;
   isReversed?: boolean;
 }
 
-const Player: React.FC<PlayerProps> = ({ life, onLifeChange, isReversed }) => {
+const Player: React.FC<PlayerProps> = ({ isReversed }) => {
+
+  const { settings } = useAppSettings();
+
+  const [life, setLife] = useState<number>(settings.defaultLifePoints);
+
+  useEffect(() => {
+    setLife(settings.defaultLifePoints);
+  }, [settings])
+
   const containerStyle = [
     styles.container,
     isReversed ? styles.reversed : null,
   ];
 
   function clamp(value: number, min: number, max: number) {
-    return Math.min(Math.max(value, 0), 50);
+    return Math.min(Math.max(value, min), max);
   }
 
   const willPositivExceed = (change: number, threshold: number) => life + change < threshold;
-  const willNegativExceed = (change: number, threshold: number) => life + change > threshold;
+  // useless since in the rules, authority can be infinite
+  // const willNegativExceed = (change: number, threshold: number) => life + change > threshold;
 
   return (
     <View style={containerStyle}>
@@ -28,10 +37,10 @@ const Player: React.FC<PlayerProps> = ({ life, onLifeChange, isReversed }) => {
       </View>
 
       <View style={styles.hpContainer}>
-        <HpButton title="5" disabled={willPositivExceed(-5, 0)} isDamage={true} onPress={() => onLifeChange(clamp(life - 5, 0, 50))} />
-        <HpButton title="1" disabled={willPositivExceed(-1, 0)} isDamage={true} onPress={() => onLifeChange(clamp(life - 1, 0, 50))} />
-        <HpButton title="1" disabled={willNegativExceed(1, 50)} onPress={() => onLifeChange(clamp(life + 1, 0, 50))} />
-        <HpButton title="5" disabled={willNegativExceed(5, 50)} onPress={() => onLifeChange(clamp(life + 5, 0, 50))} />
+        <HpButton title="5" disabled={willPositivExceed(-5, 0)} isDamage={true} onPress={() => setLife(clamp(life - 5, 0, 50))} />
+        <HpButton title="1" disabled={willPositivExceed(-1, 0)} isDamage={true} onPress={() => setLife(clamp(life - 1, 0, 50))} />
+        <HpButton title="1" onPress={() => setLife(life + 1)} />
+        <HpButton title="5" onPress={() => setLife(life + 5)} />
       </View>
     </View>
   );
@@ -57,8 +66,7 @@ const styles = StyleSheet.create({
   lifeText: {
     justifyContent: 'center',
     alignItems: 'center',
-
-    fontSize: 36,
+    fontSize: 72,
     marginHorizontal: 20,
     textAlign: 'center',
   },

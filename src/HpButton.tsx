@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, Button, StyleSheet, TouchableOpacity, ImageBackground, TouchableHighlight } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
+import { useAppSettings } from './context/AppSettings';
 
 
 
@@ -17,9 +18,13 @@ const authorityImage = require('../assets/images/authority.png');
 
 const HpButton: React.FC<HpButtonProps> = ({ title, onPress, disabled, isDamage: isCombat }) => {
 
+    const { settings } = useAppSettings();
+
     const gradientColors = disabled
         ? ['rgb(75, 75, 75)', 'rgb(139, 139, 139)', 'rgb(75, 75, 75)']
         : ['rgb(175, 175, 175)', 'rgb(239, 239, 239)', 'rgb(133, 133, 133)'];
+
+    useEffect(() => { }, [settings]);
 
     return (
         <TouchableHighlight
@@ -33,10 +38,12 @@ const HpButton: React.FC<HpButtonProps> = ({ title, onPress, disabled, isDamage:
                 style={styles.gradient}
                 start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
             >
+
+
                 <ImageBackground
                     style={styles.gradient}
                     resizeMode='cover'
-                    source={isCombat ? combatImage : authorityImage}
+                    source={ isCombat ? combatImage : authorityImage }
                 >
                     <Text style={styles.text}>{title}</Text>
                 </ImageBackground>
