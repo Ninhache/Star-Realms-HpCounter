@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { Animated, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { GestureHandlerRootView, PanGestureHandler, PanGestureHandlerGestureEvent, State, TextInput } from 'react-native-gesture-handler';
-import { useAppSettings } from './context/AppSettings';
+import { Animated, Image, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
+import { GestureHandlerRootView, PanGestureHandler, PanGestureHandlerGestureEvent, State, TextInput } from 'react-native-gesture-handler';
+import ExternalLink from './ExternalLink';
+import { useAppSettings } from './context/AppSettings';
 
 
 interface SettingsModalProps {
     isVisible: boolean;
     setVisible: (bool: boolean) => void;
 }
+
+
 
 const SettingsModal: React.FC<SettingsModalProps> = ({ isVisible, setVisible }) => {
 
@@ -17,7 +20,11 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isVisible, setVisible }) 
 
     const handleSave = () => {
 
-        setSettings({ ...settings, defaultLifePoints: parseInt(localLifePoints, 10) });
+        setSettings({
+            ...settings,
+            defaultLifePoints: parseInt(localLifePoints, 10),
+            useImage: useImage
+        });
         setVisible(false);
     };
 
@@ -46,6 +53,8 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isVisible, setVisible }) 
     };
 
     const [useImage, setUseImage] = useState<boolean>(settings.useImage);
+
+    const github = require('../assets/images/github.png');
 
     return (
         <Modal
@@ -76,15 +85,39 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isVisible, setVisible }) 
                             </View>
 
                             <View style={{ flexDirection: 'row' }}>
-                                <Text style={styles.setting}> Star realms images </Text>
+                                <Text style={styles.setting}> Use Star realms images </Text>
                                 <BouncyCheckbox fillColor='rgb(34,34,34)' size={35} onPress={() => setUseImage(!useImage)} />
                             </View>
-                            <Text style={[styles.setting, styles.wip]}> Soon working.. </Text>
+
+                            {/* <Text style={[styles.setting, styles.wip]}> Soon working.. </Text> */}
                         </View>
 
-                        <TouchableOpacity onPress={handleSave} style={styles.button}>
-                            <Text>Quit parameters</Text>
-                        </TouchableOpacity>
+                        <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+
+                            {/* <OpenURLButton url={"https://github.com/Ninhache/starrealms"}>Open Supported URL</OpenURLButton> */}
+                            <ExternalLink url="https://github.com/Ninhache/starrealms"
+                                style={{
+                                    width: 50,
+                                    height: 50,
+                                    alignSelf: 'center',
+                                    marginBottom: 12
+                                }}
+                            >
+                                <Image
+                                    style={{
+                                        flex: 1,
+                                        width: undefined,
+                                        height: undefined,
+                                    }}
+                                    resizeMode='cover'
+                                    source={github}
+                                />
+                            </ExternalLink>
+
+                            <TouchableOpacity onPress={handleSave} style={styles.button}>
+                                <Text>Quit parameters</Text>
+                            </TouchableOpacity>
+                        </View>
 
                     </Animated.View>
                 </PanGestureHandler>
@@ -116,6 +149,7 @@ const styles = StyleSheet.create({
         fontStyle: 'italic'
     },
     button: {
+        alignSelf: 'stretch',
         backgroundColor: "rgb(34,34,34)",
         padding: 35,
         alignItems: 'center',

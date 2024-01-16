@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
+import { View, Text, Button, StyleSheet, Settings } from 'react-native';
 import HpButton from './HpButton';
 import { useAppSettings } from './context/AppSettings';
 
@@ -30,6 +30,7 @@ const Player: React.FC<PlayerProps> = ({ isReversed }) => {
   // useless since in the rules, authority can be infinite
   // const willNegativExceed = (change: number, threshold: number) => life + change > threshold;
 
+
   return (
     <View style={containerStyle}>
       <View style={styles.lifeTextContainer}>
@@ -37,10 +38,10 @@ const Player: React.FC<PlayerProps> = ({ isReversed }) => {
       </View>
 
       <View style={styles.hpContainer}>
-        <HpButton title="5" disabled={willPositivExceed(-5, 0)} isDamage={true} onPress={() => setLife(clamp(life - 5, 0, 50))} />
-        <HpButton title="1" disabled={willPositivExceed(-1, 0)} isDamage={true} onPress={() => setLife(clamp(life - 1, 0, 50))} />
-        <HpButton title="1" onPress={() => setLife(life + 1)} />
-        <HpButton title="5" onPress={() => setLife(life + 5)} />
+        <HpButton title={`${settings.useImage ? '' : '-'}5`} disabled={willPositivExceed(-5, 0)} isDamage={true} onPress={() => setLife(clamp(life - 5, 0, 50))} />
+        <HpButton title={`${settings.useImage ? '' : '-'}1`} disabled={willPositivExceed(-1, 0)} isDamage={true} onPress={() => setLife(clamp(life - 1, 0, 50))} />
+        <HpButton title={`${settings.useImage ? '' : '+'}1`} onPress={() => setLife(life + 1)} />
+        <HpButton title={`${settings.useImage ? '' : '+'}5`} onPress={() => setLife(life + 5)} />
       </View>
     </View>
   );

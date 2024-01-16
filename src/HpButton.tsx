@@ -26,6 +26,20 @@ const HpButton: React.FC<HpButtonProps> = ({ title, onPress, disabled, isDamage:
 
     useEffect(() => { }, [settings]);
 
+    const backgroundImage = settings.useImage ? (
+        <ImageBackground
+            style={styles.gradient}
+            resizeMode='cover'
+            source={isCombat ? combatImage : authorityImage}
+        >
+            <Text style={styles.text}>{title}</Text>
+        </ImageBackground>
+    ) : (
+        <View style={styles.gradient}>
+            <Text style={styles.text}>{title}</Text>
+        </View>
+    );
+
     return (
         <TouchableHighlight
             underlayColor={isCombat ? "red" : "green"}
@@ -38,16 +52,7 @@ const HpButton: React.FC<HpButtonProps> = ({ title, onPress, disabled, isDamage:
                 style={styles.gradient}
                 start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
             >
-
-
-                <ImageBackground
-                    style={styles.gradient}
-                    resizeMode='cover'
-                    source={ isCombat ? combatImage : authorityImage }
-                >
-                    <Text style={styles.text}>{title}</Text>
-                </ImageBackground>
-
+                {backgroundImage}
             </LinearGradient>
         </TouchableHighlight>
     );
