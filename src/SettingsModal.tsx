@@ -1,31 +1,49 @@
 import React, { useEffect, useState } from 'react';
 import { Animated, Image, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import { GestureHandlerRootView, PanGestureHandler, PanGestureHandlerGestureEvent, State, TextInput } from 'react-native-gesture-handler';
 import ExternalLink from './ExternalLink';
-import { useAppSettings } from './context/AppSettings';
+import { GlobalState, useGlobalState } from './context/AppSettings';
+import SettingTextInput from './SettingTextInput';
 
+const TextInputComponent: React.FC<{parameterKey: string}> = ({ parameterKey }: {parameterKey: string}) => {
+    const { state, dispatch } = useGlobalState();
+
+    const handleTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        dispatch({
+            type: 'UPDATE_PARAMETER',
+            payload: { key: parameterKey, value: event.target.value },
+        });
+    };
+
+    return (
+        <input
+            type="text"
+            value={state[parameterKey]}
+            onChange={handleTextChange}
+        />
+    );
+};
 
 interface SettingsModalProps {
     isVisible: boolean;
     setVisible: (bool: boolean) => void;
 }
 
-
-
 const SettingsModal: React.FC<SettingsModalProps> = ({ isVisible, setVisible }) => {
 
-    const { settings, setSettings } = useAppSettings();
-    const [localLifePoints, setLocalLifePoints] = useState(settings.defaultLifePoints.toString());
+    const { state, dispatch } = useGlobalState();
+
+    const [localState, setLocalState] = useState<GlobalState>(state);
 
     const handleSave = () => {
-
-        setSettings({
-            ...settings,
-            defaultLifePoints: parseInt(localLifePoints, 10),
-            useImage: useImage
-        });
         setVisible(false);
+    };
+
+    const handleTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        dispatch({
+            type: 'UPDATE_PARAMETER',
+            payload: { key: parameterKey, value: event.target.value },
+        });
     };
 
     const translateY = new Animated.Value(0);
@@ -52,7 +70,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isVisible, setVisible }) 
         }
     };
 
-    const [useImage, setUseImage] = useState<boolean>(settings.useImage);
+    // const [useImage, setUseImage] = useState<boolean>(settings.useImage);
 
     const github = require('../assets/images/github.png');
 
@@ -75,18 +93,12 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isVisible, setVisible }) 
 
                             <View style={{ flexDirection: 'row' }}>
                                 <Text style={styles.setting}> Default life points : </Text>
-                                <TextInput
-                                    style={styles.setting}
-
-                                    value={localLifePoints}
-                                    onChangeText={setLocalLifePoints}
-                                    keyboardType="numeric"
-                                />
+                                <SettingTextInput style={styles.setting} settingKey='defaultLife' />
                             </View>
 
                             <View style={{ flexDirection: 'row' }}>
                                 <Text style={styles.setting}> Use Star realms images </Text>
-                                <BouncyCheckbox fillColor='rgb(34,34,34)' size={35} onPress={() => setUseImage(!useImage)} />
+                                {/* <BouncyCheckbox fillColor='rgb(34,34,34)' size={35} onPress={() => setUseImage(!useImage)} /> */}
                             </View>
 
                             {/* <Text style={[styles.setting, styles.wip]}> Soon working.. </Text> */}

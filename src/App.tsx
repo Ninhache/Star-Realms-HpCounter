@@ -3,20 +3,21 @@ import { StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
 
 import Player from './Player';
 import SettingsBar from './SettingsBar';
-import { AppSettingsProvider } from './context/AppSettings';
+import { GlobalStateProvider } from './context/AppSettings';
+
 
 function App(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
 
   return (
-    <AppSettingsProvider>
+    <GlobalStateProvider>
       <View style={styles.container}>
         <StatusBar hidden={true} />
         <Player isReversed={true} />
         <SettingsBar />
         <Player />
       </View>
-    </AppSettingsProvider>
+    </GlobalStateProvider>
   );
 }
 
