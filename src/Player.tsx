@@ -14,7 +14,6 @@ const Player: React.FC<PlayerProps> = ({ isReversed }) => {
   const [life, setLife] = useState<number>(state.defaultLife);
 
   useEffect(() => {
-    console.log("defaultLife:", state.defaultLife)
     setLife(state.defaultLife);
   }, [state.defaultLife]);
 
@@ -36,13 +35,10 @@ const Player: React.FC<PlayerProps> = ({ isReversed }) => {
       </View>
 
       <View style={styles.hpContainer}>
-        <HpButton title={`${state.useImage ? '' : '-'}5`} disabled={willPositivExceed(-5, 0)} isDamage={true}
-        onPress={() => {
-          setLife(clamp(life - 5, 0, 50))
-        }} />
-        <HpButton title={`${state.useImage ? '' : '-'}1`} disabled={willPositivExceed(-1, 0)} isDamage={true} onPress={() => setLife(clamp(life - 1, 0, 50))} />
-        <HpButton title={`${state.useImage ? '' : '+'}1`} onPress={() => setLife(life + 1)} />
-        <HpButton title={`${state.useImage ? '' : '+'}5`} onPress={() => setLife(life + 5)} />
+        <HpButton title={`${state.useImage ? '' : '-'}5`} disabled={willPositivExceed(-5, 0)} isDamage={true} onPress={() => { setLife(Math.max(parseInt(`${life}`, 10) - 5, 0))}} />
+        <HpButton title={`${state.useImage ? '' : '-'}1`} disabled={willPositivExceed(-1, 0)} isDamage={true} onPress={() => setLife(Math.max(parseInt(`${life}`, 10) - 1, 0))} />
+        <HpButton title={`${state.useImage ? '' : '+'}1`} onPress={() => setLife(parseInt(`${life}`, 10) + 1)} />
+        <HpButton title={`${state.useImage ? '' : '+'}5`} onPress={() => setLife(parseInt(`${life}`, 10) + 5)} />
       </View>
     </View>
   );

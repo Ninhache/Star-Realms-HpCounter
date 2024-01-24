@@ -1,38 +1,38 @@
 import React, { useState, useEffect } from 'react';
 import { TextInput, StyleSheet, StyleProp, ViewStyle, View } from 'react-native';
 import { useGlobalState, GlobalState } from './context/AppSettings';
+import BouncyCheckbox from 'react-native-bouncy-checkbox';
 
-interface SettingTextInputProps {
+interface CheckBoxInputProps {
     settingKey: keyof GlobalState;
     style?: StyleProp<ViewStyle>;
 }
 
-const SettingTextInput: React.FC<SettingTextInputProps> = ({ settingKey, style }) => {
+const CheckBoxInput: React.FC<CheckBoxInputProps> = ({ settingKey, style }) => {
     const { state, dispatch } = useGlobalState();
+
     const [localState, setLocalState] = useState<any>(state[settingKey]);
 
     useEffect(() => {
         setLocalState(state[settingKey]);
     }, [state[settingKey], settingKey]);
 
-    const handleBlur = () => {
-        if (localState !== state[settingKey]) {
-            dispatch({
-                type: 'UPDATE_PARAMETER',
-                payload: { key: settingKey, value: localState },
-            });
-        }
+    const handlePress = (e: boolean) => {
+        dispatch({
+            type: 'UPDATE_PARAMETER',
+            payload: { key: settingKey, value: e },
+        });
     };
 
     return (
-        <TextInput
+        <BouncyCheckbox
             style={style}
-            value={`${localState}`}
-            onChangeText={setLocalState}
-            onBlur={handleBlur}
-            keyboardType="numeric"
+            fillColor='rgb(34,34,34)'
+            size={35}
+            onPress={handlePress}
+            isChecked={!!state[settingKey]}
         />
     );
 };
 
-export default SettingTextInput;
+export default CheckBoxInput;

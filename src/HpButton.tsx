@@ -23,6 +23,9 @@ const HpButton: React.FC<HpButtonProps> = ({ title, onPress, disabled, isDamage:
         ? ['rgb(75, 75, 75)', 'rgb(139, 139, 139)', 'rgb(75, 75, 75)']
         : ['rgb(175, 175, 175)', 'rgb(239, 239, 239)', 'rgb(133, 133, 133)'];
 
+    useEffect(() => {
+    }, [state.useImage]);
+
     const backgroundImage = state.useImage ? (
         <ImageBackground
             style={styles.gradient}

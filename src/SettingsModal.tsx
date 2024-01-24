@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Animated, Image, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { GestureHandlerRootView, PanGestureHandler, PanGestureHandlerGestureEvent, State, TextInput } from 'react-native-gesture-handler';
-import ExternalLink from './ExternalLink';
-import { GlobalState, useGlobalState } from './context/AppSettings';
-import SettingTextInput from './SettingTextInput';
+import { GestureHandlerRootView, PanGestureHandler, PanGestureHandlerGestureEvent, State } from 'react-native-gesture-handler';
 
-const TextInputComponent: React.FC<{parameterKey: string}> = ({ parameterKey }: {parameterKey: string}) => {
+import ExternalLink from './ExternalLink';
+import SettingTextInput from './SettingTextInput';
+import { GlobalState, useGlobalState } from './context/AppSettings';
+import CheckBoxInput from './CheckBoxInput';
+
+const TextInputComponent: React.FC<{ parameterKey: string }> = ({ parameterKey }: { parameterKey: string }) => {
     const { state, dispatch } = useGlobalState();
 
     const handleTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -39,12 +41,12 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isVisible, setVisible }) 
         setVisible(false);
     };
 
-    const handleTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        dispatch({
-            type: 'UPDATE_PARAMETER',
-            payload: { key: parameterKey, value: event.target.value },
-        });
-    };
+    // const handleTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    //     dispatch({
+    //         type: 'UPDATE_PARAMETER',
+    //         payload: { key: parameterKey, value: event.target.value },
+    //     });
+    // };
 
     const translateY = new Animated.Value(0);
 
@@ -98,7 +100,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isVisible, setVisible }) 
 
                             <View style={{ flexDirection: 'row' }}>
                                 <Text style={styles.setting}> Use Star realms images </Text>
-                                {/* <BouncyCheckbox fillColor='rgb(34,34,34)' size={35} onPress={() => setUseImage(!useImage)} /> */}
+                                <CheckBoxInput settingKey='useImage' />
                             </View>
 
                             {/* <Text style={[styles.setting, styles.wip]}> Soon working.. </Text> */}
