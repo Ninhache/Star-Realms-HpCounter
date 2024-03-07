@@ -1,13 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import HpButton from './HpButton';
-import { useGlobalState } from './context/AppSettings';
+import { useGlobalState } from '../context/AppSettings';
+import { Layout, PlayerCount } from '../App';
 
-interface PlayerProps {
+// todo: change this to handle an angle to have 4 players (for example)
+export interface PlayerProps {
   isReversed?: boolean;
+  id: number;
+  highlight: boolean
 }
 
-const Player: React.FC<PlayerProps> = ({ isReversed }) => {
+const colorArray: string[] = [
+  "#4550af",
+  "#d0282f",
+  "#45CF80",
+  "#C0CF0F",  
+]
+
+
+const VerticalPlayer: React.FC<PlayerProps> = ({ id, isReversed = false }) => {
 
   const { state } = useGlobalState();
 
@@ -17,10 +29,11 @@ const Player: React.FC<PlayerProps> = ({ isReversed }) => {
     setLife(state.defaultLife);
   }, [state.defaultLife]);
 
-  const containerStyle = [
-    styles.container,
-    isReversed ? styles.reversed : null,
-  ];
+  const dynamicStyle = {
+    transform: [{ rotate: `${isReversed ? 180 : 0}deg` }],
+    // backgroundColor: colorArray[id],
+    backgroundColor: `${colorArray[id]}`,
+  };
 
   function clamp(value: number, min: number, max: number) {
     return Math.min(Math.max(value, min), max);
@@ -29,14 +42,14 @@ const Player: React.FC<PlayerProps> = ({ isReversed }) => {
   const willPositivExceed = (change: number, threshold: number) => life + change < threshold;
 
   return (
-    <View style={containerStyle}>
+    <View style={[styles.container, dynamicStyle]}>
       <View style={styles.lifeTextContainer}>
         <Text style={styles.lifeText}>{life}</Text>
       </View>
 
       <View style={styles.hpContainer}>
-        <HpButton title={`${state.useImage ? '' : '-'}5`} disabled={willPositivExceed(-5, 0)} isDamage={true} onPress={() => { setLife(Math.max(parseInt(`${life}`, 10) - 5, 0))}} />
-        <HpButton title={`${state.useImage ? '' : '-'}1`} disabled={willPositivExceed(-1, 0)} isDamage={true} onPress={() => setLife(Math.max(parseInt(`${life}`, 10) - 1, 0))} />
+        <HpButton title={`${state.useImage ? '' : '-'}5`} disabled={willPositivExceed(-5, 0)} isCombat={true} onPress={() => { setLife(Math.max(parseInt(`${life}`, 10) - 5, 0))}} />
+        <HpButton title={`${state.useImage ? '' : '-'}1`} disabled={willPositivExceed(-1, 0)} isCombat={true} onPress={() => setLife(Math.max(parseInt(`${life}`, 10) - 1, 0))} />
         <HpButton title={`${state.useImage ? '' : '+'}1`} onPress={() => setLife(parseInt(`${life}`, 10) + 1)} />
         <HpButton title={`${state.useImage ? '' : '+'}5`} onPress={() => setLife(parseInt(`${life}`, 10) + 5)} />
       </View>
@@ -47,14 +60,9 @@ const Player: React.FC<PlayerProps> = ({ isReversed }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: 'rgb(208,40,47)',
-  },
-  reversed: {
-    transform: [{ rotate: '180deg' }],
-    backgroundColor: '#4550af'
+    flexDirection: 'column'
   },
   lifeTextContainer: {
     flex: 1,
@@ -65,14 +73,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     fontSize: 72,
-    marginHorizontal: 20,
+    
     textAlign: 'center',
   },
   hpContainer: {
-    width: '100%',
-    display: 'flex',
+    // flex: 1,
     flexDirection: 'row',
   }
 });
 
-export default Player;
+export default VerticalPlayer;
