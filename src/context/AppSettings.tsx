@@ -27,7 +27,11 @@ const defaultState: GlobalState = {
     useImage: true,
 };
 
-export const GlobalStateProvider: React.FC = ({ children }) => {
+type Props = {
+    children?: React.ReactNode;
+};
+
+export const GlobalStateProvider: React.FC<Props> = ({ children }) => {
     const [state, dispatch] = useReducer(globalStateReducer, defaultState);
 
     return (
