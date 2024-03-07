@@ -9,21 +9,16 @@ import { Layout } from './App';
 import SettingsModal from './SettingsModal';
 
 const settingsImage = require("../assets/images/settings.png")
+const selectImage = require("../assets/images/select.png")
 
 interface SettingsBarProps {
     layout?: Layout,
-    onPlayerSelect?: (playerId: number) => void;
-    playersLength: number;
-  }
+    onPlayerSelect?: () => void;
+}
 
-const SettingsBar: React.FC<SettingsBarProps> = ({ playersLength, onPlayerSelect = () => {console.log("UNDEFINED FUNCTION")} , layout = "HORIZONTAL" }) => {
+const SettingsBar: React.FC<SettingsBarProps> = ({ onPlayerSelect = () => {console.log("UNDEFINED FUNCTION")} , layout = "HORIZONTAL" }) => {
 
     const [isModalVisible, setModalVisible] = useState(false);
-
-    const selectRandomly = (): void => {
-        console.log("choose player X from the list []");
-        onPlayerSelect(Math.round(Math.random() * (playersLength - 1)));
-    }
 
     return (
         <View style={styles.container}>
@@ -31,8 +26,8 @@ const SettingsBar: React.FC<SettingsBarProps> = ({ playersLength, onPlayerSelect
                 <Image style={styles.settingsImage} source={settingsImage} />
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => selectRandomly()}>
-                <Image style={styles.settingsImage} source={settingsImage} />
+            <TouchableOpacity onPress={() => onPlayerSelect()}>
+                <Image style={styles.settingsImage} source={selectImage} />
             </TouchableOpacity>
 
             <SettingsModal isVisible={isModalVisible} setVisible={setModalVisible}/>
