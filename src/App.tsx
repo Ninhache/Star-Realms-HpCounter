@@ -6,14 +6,17 @@ import VerticalPlayer from './Player/VerticalPlayer';
 import SettingsBar from './SettingsBar';
 import { GlobalStateProvider } from './context/AppSettings';
 
-// type Player = { };
 export type Layout = "HORIZONTAL" | "VERTICAL";
 export type PlayerCount = 1 | 2 | 3 | 4;
+
+export function sleep(ms: number) {
+	return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
 function App(): React.JSX.Element {
   // const isDarkMode = useColorScheme() === 'dark';
 
-  const playerCount: PlayerCount = 4;
+  const playerCount: PlayerCount = 2;
   const middle: number = Math.ceil(playerCount / 2);
 
   const layout: Layout = playerCount > 2 ? "HORIZONTAL" : "VERTICAL";
@@ -24,9 +27,46 @@ function App(): React.JSX.Element {
 
   const [highlight, setHighlight] = useState(-1);
 
-  const onPlayerSelect = (playerId: number) => {
-    console.log(`Player selected: ${playerId}`);
+
+  let isSelecting = false;  
+  const onPlayerSelect = async () => {
+    // basic lock to avoid spamming the button
+    if (isSelecting) return;
+
+    isSelecting = true;
+
+    const sequenceLength = 20;
+
+    const generatedSequence = (): number[] => {
+      let array: number[] = [];
+      for (let i: number = 0; i < sequenceLength; i++) {
+        array.push(Math.round(Math.random() * (playerCount - 1)));
+      }
+      return array;
+    }
+
+    const sequence: number[] = generatedSequence();
+
+    // need 1 2 4 3
+    for (let i: number = 0; i < sequenceLength; i++) {
+      setHighlight(sequence[i]);
+      await sleep(15 * (i + 1));
+    }
+
+    await sleep(300);
+
+    const choosenPlayer = sequence[sequenceLength - 1];
     
+    for (let i: number = 0; i < 5; i++) {
+      setHighlight(choosenPlayer);
+      await sleep(250);
+      setHighlight(-1);
+      await sleep(250);
+    }
+
+    isSelecting = false;
+    await sleep(5000);
+    setHighlight(-1)
   };
 
   if (layout === "VERTICAL") {
@@ -47,8 +87,6 @@ function App(): React.JSX.Element {
     }
   }
 
-  console.log(leftPart[0])
-
   const dynamicStyle = {
     flex: 1,
     // flexDirection: layout === 'HORIZONTAL' ? 'row' : 'column',
@@ -64,7 +102,7 @@ function App(): React.JSX.Element {
           {
             layout === "HORIZONTAL" && (
               <>
-                <SettingsBar playersLength={playerCount} onPlayerSelect={onPlayerSelect} />
+                <SettingsBar onPlayerSelect={onPlayerSelect} />
                 <>
                   <View style={styles.playerContainer}>
                     {leftPart}
@@ -85,7 +123,7 @@ function App(): React.JSX.Element {
                     {leftPart}
                   </View>
                 }
-                <SettingsBar playersLength={playerCount} onPlayerSelect={onPlayerSelect} />
+                <SettingsBar onPlayerSelect={onPlayerSelect} />
                 {
                   rightPart.length >= 1 && <View style={styles.playerContainer}>
                     {rightPart}
