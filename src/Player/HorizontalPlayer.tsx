@@ -12,11 +12,13 @@ const colorArray: string[] = [
   "#C0CF0F",  
 ]
 
-const HorizontalPlayer: React.FC<PlayerProps> = ({ id, isReversed = false }) => {
+const HorizontalPlayer: React.FC<PlayerProps> = ({ id, isReversed = false, highlight }) => {
 
   const { state } = useGlobalState();
 
   const [life, setLife] = useState<number>(state.defaultLife);
+
+  
 
   useEffect(() => {
     setLife(state.defaultLife);
@@ -28,6 +30,7 @@ const HorizontalPlayer: React.FC<PlayerProps> = ({ id, isReversed = false }) => 
     transform: [{ rotate: `${calculatedDegree}deg` }],
     // backgroundColor: colorArray[id],
     backgroundColor: `${colorArray[id]}`,
+    borderColor: highlight ? "red" : "black"
   };
 
   const containerStyle = [
@@ -65,8 +68,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     flexDirection: 'row',
 
-    borderColor: 'black',
     borderWidth: 2,
+    borderColor: 'black',
     
   },
   highlight: {

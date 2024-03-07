@@ -18,8 +18,7 @@ const colorArray: string[] = [
   "#C0CF0F",  
 ]
 
-
-const VerticalPlayer: React.FC<PlayerProps> = ({ id, isReversed = false }) => {
+const VerticalPlayer: React.FC<PlayerProps> = ({ id, isReversed = false, highlight }) => {
 
   const { state } = useGlobalState();
 
@@ -33,6 +32,7 @@ const VerticalPlayer: React.FC<PlayerProps> = ({ id, isReversed = false }) => {
     transform: [{ rotate: `${isReversed ? 180 : 0}deg` }],
     // backgroundColor: colorArray[id],
     backgroundColor: `${colorArray[id]}`,
+    borderColor: highlight ? "red" : "black"
   };
 
   function clamp(value: number, min: number, max: number) {
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'space-between',
-    flexDirection: 'column'
+    borderWidth: 2
   },
   lifeTextContainer: {
     flex: 1,
